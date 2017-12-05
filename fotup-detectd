@@ -1,22 +1,17 @@
 #!/bin/bash
 
+# source -> chache -> destination
+
 source /etc/fotup/conf
-
-# check for sd card with fotos
+# keep checking for sd card with fotos
+mkdir -p "$CACHEPATH" /mnt/fotup
 while true; do
-  if [[ -d "$SDPATH" ]]; then
-    mkdir -p "$CACHEPATH"
-    echo "caching..."
-    # copy all raw, jpg and movie to cachepath and flatten directory structure
-    rsync -Pavz "$SOURCEPATH" "$CACHEPATH"
-    echo "done caching. sorting..."
-
-    mkdir -p /mnt/fotup
-    sshfs "$DESTINATIONHOST":"$DESTINATIONPATH" /mnt/fotup
-    /opt/fotup/fotup.sort "$SDPATH" /mnt/fotup
-    sync
-    umount "$SDPATH"
-    sleep 30
-  fi
   sleep 2
+  if [[ ! -d "$SDPATH" ]]; then continue; fi
+  rsync -Pavz "$SOURCEPATH" "$CACHEPATH" # cache
+  sshfs "$DESTINATIONHOST":"$DESTINATIONPATH" /mnt/fotup
+  /opt/fotup/fotup-sort "$CACHEPATH" /mnt/fotup
+  sync
+  umount "$SDPATH"
+  sleep 10
 done
