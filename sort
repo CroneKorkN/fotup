@@ -4,7 +4,7 @@ if [[ "$1" == "" ]] || [[ "$2" == "" ]]; then exit 1; fi
 SOURCEPATH=$1
 DESTINATIONPATH=$2
 
-for f in `find "$SOURCEPATH" -regex "[^.]*\.\(JPG\|CR2\|MP4\)"`; do
+for f in `find "$SOURCEPATH" -iname *.JPG -o -iname *.CR2 -o -iname *.MP4`; do
   DATE=`exiftool "$f" | grep -m 1 "Create Date" `
   YEAR=`echo $DATE | cut -d':' -f2`
   MONTH=`echo $DATE | cut -d':' -f3`
@@ -14,7 +14,7 @@ for f in `find "$SOURCEPATH" -regex "[^.]*\.\(JPG\|CR2\|MP4\)"`; do
   SECOND=`echo $DATE | cut -d':' -f6`
   HASH=`echo $f | shasum | head -c 5`
   EXT=`basename $f | cut -d'.' -f2 | tr '[:upper:]' '[:lower:]'`
-  if [[ "$EXT" = "CR2" ]]; then RAW="raw/"; else RAW=""; fi
+  if [[ "$EXT" = "cr2" ]]; then RAW="raw/"; else RAW=""; fi
   FILE="$DESTINATIONPATH/$YEAR/$MONTH/$DAY/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"-"$HASH"."$EXT"
   FILE=`echo $FILE | tr -d ' '` # remove whitespaces
   mkdir -p "$(dirname "$FILE")"
