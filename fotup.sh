@@ -20,15 +20,17 @@ while true; do
     for f in $(find "$CACHEPATH" -regex "[^.]*\.\(JPG\|CR2\|MP4\)"); do
       exiftool "$f" > "$EXIFCACHE"
       if cat "$EXIFCACHE" | grep -m 1 "EOS 80D"; then CAM="80D"; else CAM="550D"; fi
+      NUM=$(basename $f | cut -d'_' -f2 | cut -d'.' -f1)
+      HASH=$(echo "$CAM$NUM" | shasum | head -c 5)
       YEAR=$(cat "$EXIFCACHE" | grep -m 1 "Create Date" | cut -d':' -f2 | tr -d " \t")
       MONTH=$(cat "$EXIFCACHE" | grep -m 1 "Create Date" | cut -d':' -f3)
       DAY=$(cat "$EXIFCACHE" | grep -m 1 "Create Date" | cut -d':' -f4 | cut -d' ' -f1)
       HOUR=$(cat "$EXIFCACHE" | grep -m 1 "Create Date" | cut -d':' -f4 | cut -d' ' -f2)
       MINUTE=$(cat "$EXIFCACHE" | grep -m 1 "Create Date" | cut -d':' -f5)
-      NUM=$(basename $f | cut -d'_' -f2 | cut -d'.' -f1)
-      EXT=$(basename $f | cut -d'.' -f2)
+      SECOND=$(cat "$EXIFCACHE" | grep -m 1 "Create Date" | cut -d':' -f6)
+      EXT=$(basename $f | cut -d'.' -f2 | tr '[:upper:]' '[:lower:])
       if [[ "$EXT" = "CR2" ]]; then RAW="raw/"; else RAW=""; fi
-      TARGETPATH="$SORTEDPATH/$YEAR/$MONTH/$DAY/$RAW$YEAR$MONTH$DAY"-"$HOUR":"$MINUTE"_"$CAM$NUM"."$EXT"
+      TARGETPATH="$SORTEDPATH/$YEAR/$MONTH/$DAY/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"-"$HASH"."$EXT"
       mkdir -p "$(dirname "$TARGETPATH")"
       mv -v "$f" "$TARGETPATH"
     done
