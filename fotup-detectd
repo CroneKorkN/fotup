@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# source -> chache -> destination
+# source -> cache -> destination
 
 source /etc/fotup/conf
 # keep checking for sd card with fotos
