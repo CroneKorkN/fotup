@@ -1,8 +1,9 @@
 #!/bin/bash
 
 apt update && apt install exfat-fuse exfat-utils exiftool ssh sshfs
-mkdir /etc/fotup
-cp conf /etc/fotup
-cp fotup.service /lib/systemd/system
+mkdir -p /etc/fotup /opt/fotup
+cp -v fotup-detectd fotup-sort /opt/fotup
+cp -v conf /etc/fotup
+cp -v fotup.service /lib/systemd/system
 systemctl enable fotup.service
 systemctl start fotup.service

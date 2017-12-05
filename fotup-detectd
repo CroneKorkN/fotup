@@ -6,7 +6,7 @@ source /etc/fotup/conf
 # keep checking for sd card with fotos
 mkdir -p "$CACHEPATH" /mnt/fotup
 while true; do
-  sleep 2
+  sleep 3
   if [[ ! -d "$SDPATH" ]]; then continue; fi
   rsync -Pavz "$SOURCEPATH" "$CACHEPATH" # cache
   sshfs "$DESTINATIONHOST":"$DESTINATIONPATH" /mnt/fotup
