@@ -10,7 +10,7 @@ while true; do
   if [[ ! -d "$SDPATH" ]]; then continue; fi
   rsync -Pavz "$SOURCEPATH" "$CACHEPATH" # cache
   sshfs "$DESTINATIONHOST":"$DESTINATIONPATH" /mnt/fotup
-  /opt/fotup/fotup-sort "$CACHEPATH" /mnt/fotup
+  /opt/fotup/sort "$CACHEPATH" /mnt/fotup
   sync
   umount "$SDPATH"
   sleep 10
