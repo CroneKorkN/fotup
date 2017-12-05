@@ -1,0 +1,4 @@
+SDPATH="/media/pi/EOS_DIGITAL"
+DESTINATIONPATH="/var/lib/nextcloud/ckn/files/Bilder/Unsortiert"
+DESTINATIONHOST=root@10.0.0.1
+CACHEPATH=~/fotup_cache

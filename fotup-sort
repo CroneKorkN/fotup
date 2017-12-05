@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [[ "$1" == "" ]] || [[ "$2" == "" ]]; then exit 1; fi
+SOURCEPATH=$1
+DESTINATIONPATH=$2
+
+for f in $(find "$SOURCEPATH" -regex "[^.]*\.\(JPG\|CR2\|MP4\)"); do
+  exiftool "$f" > /tmp/fotup # cache exiftool-output
+  YEAR=$(cat /tmp/fotup | grep -m 1 "Create Date" | cut -d':' -f2)
+  MONTH=$(cat /tmp/fotup | grep -m 1 "Create Date" | cut -d':' -f3)
+  DAY=$(cat /tmp/fotup | grep -m 1 "Create Date" | cut -d':' -f4 | cut -d' ' -f1)
+  HOUR=$(cat /tmp/fotup | grep -m 1 "Create Date" | cut -d':' -f4 | cut -d' ' -f2)
+  MINUTE=$(cat /tmp/fotup | grep -m 1 "Create Date" | cut -d':' -f5)
+  SECOND=$(cat /tmp/fotup | grep -m 1 "Create Date" | cut -d':' -f6)
+  HASH=$(echo $f | shasum | head -c 5)
+  EXT=$(basename $f | cut -d'.' -f2 | tr '[:upper:]' '[:lower:]')
+  if [[ "$EXT" = "CR2" ]]; then RAW="raw/"; else RAW=""; fi
+  FILE="$DESTINATIONPATH/$YEAR/$MONTH/$DAY/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"-"$HASH"."$EXT"
+  FILE=$(echo $FILE | tr -d ' ') # remove whitespaces
+  mkdir -p "$(dirname "$FILE")"
+  cp -v "$f" "$FILE"
+done

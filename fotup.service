@@ -1,0 +1,11 @@
+[Unit]
+Description=fotup - CKNs foto upload daemon
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+ExecStart=/opt/fotup/fotup-detectd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
