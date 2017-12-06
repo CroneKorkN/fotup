@@ -15,7 +15,7 @@ for f in `find "$SOURCEPATH" -iname *.JPG -o -iname *.CR2 -o -iname *.MP4`; do
   HASH=`echo $f | shasum | head -c 4`
   EXT=`basename $f | cut -d'.' -f2 | tr '[:upper:]' '[:lower:]'`
   if [[ "$EXT" = "cr2" ]]; then RAW="raw/"; else RAW=""; fi
-  FILE="$DESTINATIONPATH/$YEAR/$MONTH/$DAY/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
+  FILE="$DESTINATIONPATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
   FILE=`echo $FILE | tr -d ' '` # remove whitespaces
   mkdir -p "$(dirname "$FILE")"
   cp -v "$f" "$FILE"
