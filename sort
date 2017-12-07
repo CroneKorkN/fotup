@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [[ "$1" == "" ]] || [[ "$2" == "" ]]; then exit 1; fi
-SOURCEPATH=$1
-DESTINATIONPATH=$2
+SOURCEPATH="$1"
+DESTINATIONPATH="$2"
 
 for f in "`find "$SOURCEPATH" -iname *.JPG -o -iname *.CR2 -o -iname *.MP4 -o -iname *.MOV`"; do
   DATE=`exiftool "$f" | grep -m 1 "Create Date" `
