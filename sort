@@ -6,17 +6,16 @@ DESTINATIONPATH=$2
 
 for f in `find "$SOURCEPATH" -iname *.JPG -o -iname *.CR2 -o -iname *.MP4 -o -iname *.MOV`; do
   DATE=`exiftool "$f" | grep -m 1 "Create Date" `
-  YEAR=`echo $DATE | cut -d':' -f2`
+  YEAR=`echo $DATE | cut -d':' -f2 | tr -d ' '`
   MONTH=`echo $DATE | cut -d':' -f3`
   DAY=`echo $DATE | cut -d':' -f4 | cut -d' ' -f1`
   HOUR=`echo $DATE | cut -d':' -f4 | cut -d' ' -f2`
   MINUTE=`echo $DATE | cut -d':' -f5`
   SECOND=`echo $DATE | cut -d':' -f6`
   HASH=`echo $f | shasum | head -c 3`
-  EXT=`basename $f | cut -d'.' -f2 | tr '[:upper:]' '[:lower:]'`
+  EXT=`basename "$f" | cut -d'.' -f2 | tr '[:upper:]' '[:lower:]'`
   if [[ "$EXT" = "cr2" ]]; then RAW="raw/"; else RAW=""; fi
   FILE="$DESTINATIONPATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
-  FILE=`echo $FILE | tr -d ' '` # remove whitespaces
   mkdir -p "$(dirname "$FILE")"
   mv -v "$f" "$FILE"
 done
