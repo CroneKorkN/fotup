@@ -7,7 +7,7 @@ DESTINATIONPATH="$2"
 IFS=$'\n'
 for f in `find "$SOURCEPATH" -iname *.JPG -o -iname *.CR2 -o -iname *.MP4 -o -iname *.MOV`; do
   DATE=`exiftool "$f" | grep -m 1 "Create Date"`
-  if ! echo "$DATE" | grep "Create Date"; then echo "SKIP: no 'Creade Date' in exif ($f)"; continue; fi
+  if ! echo "$DATE" | grep "Create Date"; then echo "SKIP: no 'Create Date' in exif ($f)"; continue; fi
   YEAR=`echo $DATE | cut -d':' -f2 | tr -d ' '`
   MONTH=`echo $DATE | cut -d':' -f3`
   DAY=`echo $DATE | cut -d':' -f4 | cut -d' ' -f1`
